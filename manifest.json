@@ -1,0 +1,29 @@
+{
+  "name": "$Seconds Bitcoin TX Battle Royale",
+  "version": "1.0.0",
+  "description": "Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!",
+  "icon": "https://github.com/arukh89/bitcoin-tx-battle-farcaster/assets/icon.png",
+  "homeUrl": "https://github.com/arukh89/bitcoin-tx-battle-farcaster/",
+  "imageUrl": "https://github.com/arukh89/bitcoin-tx-battle-farcaster/assets/og-image.png",
+  "buttonTitle": "Join Battle 🎯",
+  "splashImageUrl": "https://github.com/arukh89/bitcoin-tx-battle-farcaster/assets/splash.png",
+  "splashBackgroundColor": "#1e3a8a",
+  "theme": {
+    "colorScheme": "dark",
+    "buttonColor": "#f7931a",
+    "backgroundColor": "#1e3a8a"
+  },
+  "author": {
+    "name": "miggles.eth",
+    "url": "https://warpcast.com/miggles"
+  },
+  "permissions": [
+    "identity",
+    "user_data"
+  ],
+  "categories": ["games", "defi", "social"],
+  "screenshots": [
+    "https://github.com/arukh89/bitcoin-tx-battle-farcaster/assets/screenshot1.png",
+    "https://github.com/arukh89/bitcoin-tx-battle-farcaster/assets/screenshot2.png"
+  ]
+}
