@@ -1,29 +1,32 @@
 {
   "name": "Bitcoin TX Battle Royale",
-  "version": "1.0.0",
-  "description": "Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!",
+  "version": "1.0.0", 
+  "description": "Real-time blockchain competition - predict Bitcoin transactions and win rewards!",
   "icon": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/icon.svg",
   "homeUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/",
   "imageUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/og-image.png",
-  "buttonTitle": "Play Game 🎯",
+  "buttonTitle": "🎯 Play Game",
   "splashImageUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/splash.png",
   "splashBackgroundColor": "#1e3a8a",
   "theme": {
     "colorScheme": "dark",
-    "buttonColor": "#f7931a",
+    "buttonColor": "#f97316", 
     "backgroundColor": "#1e3a8a"
   },
   "author": {
-    "name": "miggles.eth",
-    "url": "https://warpcast.com/miggles"
+    "name": "Bitcoin Battle Team",
+    "url": "https://warpcast.com/bitcoinbattle"
   },
   "permissions": [
-    "identity"
+    "identity",
+    "transactions"
   ],
-  "categories": ["games", "defi"],
+  "categories": ["games", "defi", "social"],
   "screenshots": [
     "https://bitcoin-tx-battle-farcaster.vercel.app/assets/screenshot1.png",
-    "https://bitcoin-tx-battle-farcaster.vercel.app/assets/screenshot2.png"
+    "https://bitcoin-tx-battle-farcaster.vercel.app/assets/screenshot2.png",
+    "https://bitcoin-tx-battle-farcaster.vercel.app/assets/screenshot3.png"
   ],
-  "minVersion": "0.4.0"
+  "minVersion": "0.4.0",
+  "frameUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/api/frame"
 }
