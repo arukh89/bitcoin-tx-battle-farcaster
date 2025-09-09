@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Replace your existing meta tags with these correct ones -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta property="fc:miniapp" content="true" />
-<meta property="fc:frame" content="true" />
-<meta property="fc:frame:manifest" content="https://bitcoin-tx-battle-farcaster.vercel.app/.well-known/farcaster.json" /> 
     
-    <!-- Remove Frame Meta Tags - We're a Mini App, not a Frame -->
-    <!-- Standard Meta Tags -->
-    <meta name="description" content="Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!" />
-    <meta name="keywords" content="bitcoin, blockchain, farcaster, miniapp, prediction, game" />
+    <!-- Required Farcaster Frame Meta Tags -->
+    <meta property="fc:frame" content="vNext">
+    <meta property="fc:frame:image" content="https://bitcoin-tx-battle-farcaster.vercel.app/assets/preview.png">
+    <meta property="fc:frame:image:aspect_ratio" content="1.91:1">
+    <meta property="fc:frame:button:1" content="🎮 Start Battle">
+    <meta property="fc:frame:button:1:action" content="launch">
+    <meta property="fc:frame:button:1:target" content="https://bitcoin-tx-battle-farcaster.vercel.app/">
+    <meta property="fc:frame:post_url" content="https://bitcoin-tx-battle-farcaster.vercel.app/">
     
-    <!-- Open Graph Meta Tags -->
+    <!-- Farcaster Mini App Meta Tag (for v2 compatibility) -->
+    <meta property="fc:miniapp" content='{"version":"1","name":"Bitcoin TX Battle","iconUrl":"https://bitcoin-tx-battle-farcaster.vercel.app/assets/icon.svg","splashImageUrl":"https://bitcoin-tx-battle-farcaster.vercel.app/assets/icon.svg","splashBackgroundColor":"#f7931a","homeUrl":"https://bitcoin-tx-battle-farcaster.vercel.app/"}'>
+    
+    <!-- OpenGraph fallback tags -->
     <meta property="og:title" content="Bitcoin TX Battle Royale - Farcaster Mini App" />
     <meta property="og:description" content="Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!" />
     <meta property="og:image" content="https://bitcoin-tx-battle-farcaster.vercel.app/assets/preview.png" />
     <meta property="og:url" content="https://bitcoin-tx-battle-farcaster.vercel.app/" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Bitcoin TX Battle Royale" />
+    
+    <!-- Rest of your existing meta tags... -->
+    <meta name="description" content="Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!" />
+    <meta name="keywords" content="bitcoin, blockchain, farcaster, miniapp, prediction, game" />
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Bitcoin TX Battle Royale - Farcaster Mini App" />
     <meta name="twitter:description" content="Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!" />
     <meta name="twitter:image" content="https://bitcoin-tx-battle-farcaster.vercel.app/assets/preview.png" />
+    
+    <!-- Your other existing meta tags continue here... -->
+</head>>
     
     <!-- Farcaster Mini App Meta Tags -->
     <meta name="farcaster:app" content="bitcoin-tx-battle" />
