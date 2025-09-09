@@ -1,9 +1,10 @@
 {
   "accountAssociation": {
-    "header": "",
-    "payload": "",
-    "signature": ""
-  },
+    "header": "eyJmaWQiOjI1MDcwNCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDA5RDAyRDI1RDBEMDgyZjdGMkUwNGI0ODM4Y0VmZTI3MWIyZGFCMDkifQ",
+    "payload": "eyJkb21haW4iOiJiaXRjb2luLXR4LWJhdHRsZS1mYXJjYXN0ZXIudmVyY2VsLmFwcCJ9",
+    "signature": "Etm/xKd4kmqLgUJiVf25CwfdzMRqpK+NwW5AM2B3fM0U2xkR9vJ67x2gBgu9Js+KkqR6EpUKdFwvXUQpHu/MFRw="
+  }
+},
   "frame": {
     "version": "1",
     "name": "Bitcoin TX Battle",
