@@ -4,8 +4,7 @@ name: Deploy Farcaster Mini App
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch: # Allow manual triggers
 
 permissions:
   contents: read
@@ -17,22 +16,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
-      - name: Setup Pages
+      - name: Verify files exist
+        run: |
+          echo "Checking repository contents..."
+          ls -la
+          echo "Checking if index.html exists..."
+          if [ -f "index.html" ]; then
+            echo "✅ index.html found"
+          else
+            echo "❌ index.html not found"
+            exit 1
+          fi
+          if [ -f "manifest.json" ]; then
+            echo "✅ manifest.json found"
+          else
+            echo "❌ manifest.json not found"
+            exit 1
+          fi
+      
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
+        
+      - name: Create deployment directory
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp manifest.json _site/
+          # Copy any other assets if they exist
+          if [ -d "assets" ]; then
+            cp -r assets _site/
+          fi
+          echo "Deployment directory contents:"
+          ls -la _site/
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
       
       - name: Deploy to GitHub Pages
         id: deployment
