@@ -1,131 +1,291 @@
 // pages/api/transactions.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 
-interface TransactionData {
-  id: string;
-  hash: string;
-  from: string;
-  to: string;
-  value: string;
-  gasPrice: string;
-  timestamp: number;
-  status: 'pending' | 'confirmed' | 'failed';
+interface BitcoinTransaction {
+  txid: string;
+  version: number;
+  locktime: number;
+  vin: Array<{
+    txid: string;
+    vout: number;
+    prevout: {
+      value: number;
+      scriptpubkey_address: string;
+    };
+  }>;
+  vout: Array<{
+    value: number;
+    scriptpubkey_address: string;
+  }>;
+  size: number;
+  weight: number;
+  fee: number;
+  status: {
+    confirmed: boolean;
+    block_height?: number;
+    block_hash?: string;
+    block_time?: number;
+  };
 }
 
-interface BattleStats {
+interface BlockData {
+  id: string;
+  height: number;
+  version: number;
+  timestamp: number;
+  tx_count: number;
+  size: number;
+  weight: number;
+  merkle_root: string;
+  previousblockhash: string;
+  mediantime: number;
+  nonce: number;
+  bits: number;
+  difficulty: number;
+}
+
+interface GameStats {
   totalTransactions: number;
   totalVolume: string;
-  activeBattles: number;
-  topPerformer: string;
+  activePlayers: number;
+  currentBlock: number;
+  nextBlockEta: number;
+  averageBlockTime: number;
 }
 
-// Mock data - replace with actual Bitcoin API calls
-const mockTransactions: TransactionData[] = [
-  {
-    id: '1',
-    hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12',
-    from: '1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2',
-    to: '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy',
-    value: '0.00150000',
-    gasPrice: '10',
-    timestamp: Date.now(),
-    status: 'confirmed'
-  },
-  {
-    id: '2',
-    hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab',
-    from: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
-    to: '1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2',
-    value: '0.00250000',
-    gasPrice: '15',
-    timestamp: Date.now() - 300000,
-    status: 'pending'
-  },
-  {
-    id: '3',
-    hash: '0xfedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321fe',
-    from: '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy',
-    to: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
-    value: '0.00075000',
-    gasPrice: '8',
-    timestamp: Date.now() - 600000,
-    status: 'confirmed'
-  }
-];
-
-const mockStats: BattleStats = {
-  totalTransactions: 1247,
-  totalVolume: '15.67834521',
-  activeBattles: 23,
-  topPerformer: '1BvBM...VN2'
-};
+// Cache for API responses
+let cachedBlockData: BlockData | null = null;
+let cachedTransactions: BitcoinTransaction[] = [];
+let lastFetch = 0;
+const CACHE_DURATION = 30000; // 30 seconds
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   try {
     if (req.method === 'GET') {
-      // In a real implementation, you would:
-      // 1. Connect to Bitcoin node/API (like BlockCypher, Blockchain.info, etc.)
-      // 2. Fetch recent transactions
-      // 3. Filter/process the data
-      // 4. Calculate statistics
+      const { type } = req.query;
       
-      // For now, return mock data
-      const response = {
-        transactions: mockTransactions,
-        stats: mockStats,
-        success: true
-      };
-      
-      res.status(200).json(response);
-    } 
-    else if (req.method === 'POST') {
-      // Handle new transaction submission
-      const { from, to, value } = req.body;
-      
-      if (!from || !to || !value) {
-        return res.status(400).json({
-          error: 'Missing required fields: from, to, value',
-          success: false
-        });
+      switch (type) {
+        case 'latest-block':
+          const blockData = await fetchLatestBlockData();
+          return res.status(200).json({ success: true, data: blockData });
+          
+        case 'transactions':
+          const { blockHash } = req.query;
+          const transactions = await fetchBlockTransactions(blockHash as string);
+          return res.status(200).json({ success: true, data: transactions });
+          
+        case 'stats':
+          const stats = await fetchGameStats();
+          return res.status(200).json({ success: true, data: stats });
+          
+        default:
+          // Return combined data
+          const [latestBlock, gameStats] = await Promise.all([
+            fetchLatestBlockData(),
+            fetchGameStats()
+          ]);
+          
+          return res.status(200).json({
+            success: true,
+            block: latestBlock,
+            stats: gameStats,
+            cached: Date.now() - lastFetch < CACHE_DURATION
+          });
       }
-      
-      // In a real implementation, you would:
-      // 1. Validate the transaction data
-      // 2. Submit to Bitcoin network
-      // 3. Store in database
-      // 4. Return transaction hash
-      
-      const newTransaction: TransactionData = {
-        id: Date.now().toString(),
-        hash: `0x${Math.random().toString(16).substr(2, 64)}`,
-        from,
-        to,
-        value: value.toString(),
-        gasPrice: '10',
-        timestamp: Date.now(),
-        status: 'pending'
-      };
-      
-      res.status(201).json({
-        transaction: newTransaction,
-        success: true
-      });
-    } 
-    else {
-      res.setHeader('Allow', ['GET', 'POST']);
-      res.status(405).json({
-        error: `Method ${req.method} not allowed`,
-        success: false
-      });
     }
-  } catch (error) {
-    console.error('API Error:', error);
-    res.status(500).json({
-      error: 'Internal server error',
-      success: false
+    
+    if (req.method === 'POST') {
+      const { action, data } = req.body;
+      
+      switch (action) {
+        case 'submit-prediction':
+          const result = await handlePredictionSubmission(data);
+          return res.status(200).json(result);
+          
+        case 'get-block-result':
+          const blockResult = await getBlockResult(data.blockHeight);
+          return res.status(200).json(blockResult);
+          
+        default:
+          return res.status(400).json({
+            success: false,
+            error: 'Invalid action'
+          });
+      }
+    }
+    
+    res.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
+    res.status(405).json({
+      success: false,
+      error: `Method ${req.method} not allowed`
     });
+    
+  } catch (error) {
+    console.error('Bitcoin API Error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch Bitcoin data',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+}
+
+async function fetchLatestBlockData(): Promise<BlockData> {
+  const now = Date.now();
+  
+  // Return cached data if still valid
+  if (cachedBlockData && (now - lastFetch) < CACHE_DURATION) {
+    return cachedBlockData;
+  }
+  
+  try {
+    // Fetch latest block height
+    const heightResponse = await fetch('https://blockstream.info/api/blocks/tip/height');
+    const latestHeight = await heightResponse.json();
+    
+    // Fetch block hash for this height
+    const hashResponse = await fetch(`https://blockstream.info/api/block-height/${latestHeight}`);
+    const blockHash = await hashResponse.text();
+    
+    // Fetch full block data
+    const blockResponse = await fetch(`https://blockstream.info/api/block/${blockHash}`);
+    const blockData = await blockResponse.json();
+    
+    // Transform to our format
+    const transformedData: BlockData = {
+      id: blockData.id,
+      height: blockData.height,
+      version: blockData.version,
+      timestamp: blockData.timestamp,
+      tx_count: blockData.tx_count,
+      size: blockData.size,
+      weight: blockData.weight,
+      merkle_root: blockData.merkle_root,
+      previousblockhash: blockData.previousblockhash,
+      mediantime: blockData.mediantime,
+      nonce: blockData.nonce,
+      bits: parseInt(blockData.bits, 16),
+      difficulty: blockData.difficulty
+    };
+    
+    cachedBlockData = transformedData;
+    lastFetch = now;
+    
+    return transformedData;
+    
+  } catch (error) {
+    console.error('Error fetching latest block:', error);
+    
+    // Return mock data if API fails
+    return {
+      id: `mock-${Date.now()}`,
+      height: 850000 + Math.floor(Math.random() * 1000),
+      version: 536870912,
+      timestamp: Math.floor(Date.now() / 1000),
+      tx_count: 2000 + Math.floor(Math.random() * 1000),
+      size: 1400000 + Math.floor(Math.random() * 400000),
+      weight: 4000000,
+      merkle_root: "0x" + Math.random().toString(16).substr(2, 64),
+      previousblockhash: "0x" + Math.random().toString(16).substr(2, 64),
+      mediantime: Math.floor(Date.now() / 1000) - 300,
+      nonce: Math.floor(Math.random() * 4294967295),
+      bits: 386089497,
+      difficulty: 55621444139429.57
+    };
+  }
+}
+
+async function fetchBlockTransactions(blockHash: string): Promise<BitcoinTransaction[]> {
+  if (!blockHash) {
+    return [];
+  }
+  
+  try {
+    const response = await fetch(`https://blockstream.info/api/block/${blockHash}/txs`);
+    const transactions = await response.json();
+    
+    return transactions.slice(0, 10); // Return first 10 transactions
+  } catch (error) {
+    console.error('Error fetching block transactions:', error);
+    return [];
+  }
+}
+
+async function fetchGameStats(): Promise<GameStats> {
+  try {
+    const latestBlock = await fetchLatestBlockData();
+    
+    // Calculate some basic stats
+    const stats: GameStats = {
+      totalTransactions: latestBlock.tx_count,
+      totalVolume: (Math.random() * 1000).toFixed(8), // Mock BTC volume
+      activePlayers: Math.floor(Math.random() * 100) + 10,
+      currentBlock: latestBlock.height,
+      nextBlockEta: 600, // ~10 minutes average
+      averageBlockTime: 600
+    };
+    
+    return stats;
+  } catch (error) {
+    console.error('Error fetching game stats:', error);
+    return {
+      totalTransactions: 0,
+      totalVolume: "0.00000000",
+      activePlayers: 0,
+      currentBlock: 0,
+      nextBlockEta: 600,
+      averageBlockTime: 600
+    };
+  }
+}
+
+async function handlePredictionSubmission(predictionData: any) {
+  // Store prediction (in a real app, this would go to a database)
+  console.log('Prediction submitted:', predictionData);
+  
+  return {
+    success: true,
+    message: 'Prediction submitted successfully',
+    predictionId: `pred_${Date.now()}`,
+    blockHeight: predictionData.blockHeight
+  };
+}
+
+async function getBlockResult(blockHeight: number) {
+  try {
+    // Fetch the specific block data
+    const hashResponse = await fetch(`https://blockstream.info/api/block-height/${blockHeight}`);
+    const blockHash = await hashResponse.text();
+    
+    const blockResponse = await fetch(`https://blockstream.info/api/block/${blockHash}`);
+    const blockData = await blockResponse.json();
+    
+    return {
+      success: true,
+      blockData: {
+        height: blockData.height,
+        tx_count: blockData.tx_count,
+        size: blockData.size,
+        timestamp: blockData.timestamp,
+        hash: blockData.id
+      }
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Block not found or not yet mined'
+    };
   }
         }
