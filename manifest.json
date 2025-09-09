@@ -1,12 +1,12 @@
 {
-  "name": "$Seconds Bitcoin TX Battle Royale",
+  "name": "Bitcoin TX Battle Royale",
   "version": "1.0.0",
   "description": "Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!",
-  "icon": "https://arukh89.github.io/bitcoin-tx-battle-farcaster/assets/icon.png",
-  "homeUrl": "https://arukh89.github.io/bitcoin-tx-battle-farcaster/",
-  "imageUrl": "https://arukh89.github.io/bitcoin-tx-battle-farcaster/assets/og-image.png",
-  "buttonTitle": "Join Battle 🎯",
-  "splashImageUrl": "https://arukh89.github.io/bitcoin-tx-battle-farcaster/assets/splash.png",
+  "icon": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/icon.svg",
+  "homeUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/",
+  "imageUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/og-image.png",
+  "buttonTitle": "Play Game 🎯",
+  "splashImageUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/splash.png",
   "splashBackgroundColor": "#1e3a8a",
   "theme": {
     "colorScheme": "dark",
@@ -18,12 +18,12 @@
     "url": "https://warpcast.com/miggles"
   },
   "permissions": [
-    "identity",
-    "user_data"
+    "identity"
   ],
-  "categories": ["games", "defi", "social"],
+  "categories": ["games", "defi"],
   "screenshots": [
-    "https://arukh89.github.io/bitcoin-tx-battle-farcaster/assets/screenshot1.png",
-    "https://arukh89.github.io/bitcoin-tx-battle-farcaster/assets/screenshot2.png"
-  ]
+    "https://bitcoin-tx-battle-farcaster.vercel.app/assets/screenshot1.png",
+    "https://bitcoin-tx-battle-farcaster.vercel.app/assets/screenshot2.png"
+  ],
+  "minVersion": "0.4.0"
 }
