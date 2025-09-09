@@ -1,0 +1,25 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "Bitcoin TX Battle",
+    "iconUrl": "https://arukh89.github.io/bitcoin-tx-battle-farcaster/assets/icon.svg",
+    "splashImageUrl": "https://arukh89.github.io/bitcoin-tx-battle-farcaster/assets/icon.svg",
+    "splashBackgroundColor": "#f7931a",
+    "homeUrl": "https://arukh89.github.io/bitcoin-tx-battle-farcaster/"
+  },
+  "metadata": {
+    "name": "Bitcoin TX Battle",
+    "description": "Battle with Bitcoin transactions in this Farcaster Mini App",
+    "longDescription": "An interactive Bitcoin transaction battle game built for Farcaster. Compare and analyze Bitcoin transactions in a fun, competitive format.",
+    "iconUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/icon.svg",
+    "imageUrl": "https://bitcoin-tx-battle-farcaster.vercel.app/assets/icon.svg",
+    "publisher": {
+      "fid": 250704
+    }
+  }
+}
