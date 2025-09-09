@@ -34,12 +34,14 @@ jobs:
           echo "Checking if index.html exists..."
           if [ -f "index.html" ]; then
             echo "✅ index.html found"
+            head -20 index.html
           else
             echo "❌ index.html not found"
             exit 1
           fi
           if [ -f "manifest.json" ]; then
             echo "✅ manifest.json found"
+            cat manifest.json
           else
             echo "❌ manifest.json not found"
             exit 1
@@ -48,17 +50,38 @@ jobs:
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
         
-      - name: Create deployment directory
+      - name: Create deployment directory and fix base paths
         run: |
           mkdir -p _site
+          
+          # Copy all files to deployment directory
           cp index.html _site/
           cp manifest.json _site/
-          # Copy any other assets if they exist
+          
+          # Copy assets directory if it exists
           if [ -d "assets" ]; then
             cp -r assets _site/
+            echo "✅ Assets copied"
           fi
+          
+          # Fix base paths in index.html for GitHub Pages subdirectory deployment
+          sed -i 's|href="/|href="/bitcoin-tx-battle-farcaster/|g' _site/index.html
+          sed -i 's|src="/|src="/bitcoin-tx-battle-farcaster/|g' _site/index.html
+          sed -i 's|url("/|url("/bitcoin-tx-battle-farcaster/|g' _site/index.html
+          
+          # Fix manifest.json paths
+          sed -i 's|"src": "/|"src": "/bitcoin-tx-battle-farcaster/|g' _site/manifest.json
+          sed -i 's|"href": "/|"href": "/bitcoin-tx-battle-farcaster/|g' _site/manifest.json
+          
+          # Update manifest start_url to include base path
+          sed -i 's|"start_url": "/"|"start_url": "/bitcoin-tx-battle-farcaster/"|g' _site/manifest.json
+          
           echo "Deployment directory contents:"
           ls -la _site/
+          echo "Modified index.html preview:"
+          head -30 _site/index.html
+          echo "Modified manifest.json:"
+          cat _site/manifest.json
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -68,3 +91,8 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
+      - name: Output deployment URL
+        run: |
+          echo "🚀 Deployment complete!"
+          echo "📱 Your Farcaster Mini App is available at: ${{ steps.deployment.outputs.page_url }}"
