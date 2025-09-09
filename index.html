@@ -1279,5 +1279,44 @@
             });
         }
     </script>
+   // Service worker registration for PWA features
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Register service worker for caching (optional)
+                console.log('📱 Service worker support detected');
+            });
+        }
+    </script>
+
+    <!-- Add Farcaster SDK script here (after line 1282) -->
+    <script>
+    // Initialize Farcaster SDK when page loads
+    window.addEventListener('load', function() {
+        // Check if Farcaster SDK is available
+        if (window.parent && window.parent.postMessage) {
+            // Signal to Farcaster that the app is ready
+            window.parent.postMessage({
+                type: 'farcaster:ready'
+            }, '*');
+            
+            console.log('Farcaster Mini App ready signal sent');
+        }
+        
+        // Alternative method if the above doesn't work
+        setTimeout(() => {
+            if (typeof sdk !== 'undefined' && sdk.actions && sdk.actions.ready) {
+                sdk.actions.ready();
+            }
+        }, 100);
+    });
+
+    // Handle any Farcaster messages
+    window.addEventListener('message', function(event) {
+        console.log('Received message:', event.data);
+    });
+    </script>
+
+</body>
+</html> 
 </body>
 </html>
