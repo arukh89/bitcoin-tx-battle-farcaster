@@ -382,6 +382,10 @@
             box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.2);
         }
 
+        .guess-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
         .submit-btn {
             padding: 16px 32px;
             background: linear-gradient(45deg, #f7931a, #ffa500);
@@ -417,6 +421,17 @@
             text-align: center;
         }
 
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: clamp(12px, 3vw, 14px);
+            text-align: center;
+        }
+
         .loading-spinner {
             width: 40px;
             height: 40px;
@@ -438,6 +453,17 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             margin: 20px 0;
+        }
+
+        .demo-mode {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            color: #fb923c;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: clamp(12px, 3vw, 14px);
+            text-align: center;
         }
 
         /* Responsive adjustments */
@@ -498,8 +524,11 @@
         <div id="farcasterSection">
             <button class="farcaster-connect" id="connectBtn" onclick="connectFarcaster()">
                 <span>🟪</span>
-                <span>Connect with Farcaster</span>
+                <span id="connectBtnText">Connect with Farcaster</span>
             </button>
+            <div id="demoMode" class="demo-mode" style="display: none;">
+                Running in demo mode - real Farcaster connection required for actual gameplay
+            </div>
         </div>
 
         <!-- User Info (hidden initially) -->
@@ -535,6 +564,7 @@
             </div>
 
             <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
         </div>
     </div>
 
@@ -553,8 +583,14 @@
             currentBlockHeight: 0,
             actualTxCount: 0,
             mempoolData: null,
-            blockCheckInterval: null
+            blockCheckInterval: null,
+            isDemo: false
         };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFarcasterSDK();
+        });
 
         // Initialize Farcaster Mini App SDK
         async function initializeFarcasterSDK() {
@@ -572,39 +608,4 @@
                     // Listen for messages from parent
                     window.addEventListener('message', handleFarcasterMessage);
                     
-                    return true;
-                } else {
-                    console.log('Not running in Farcaster client - demo mode');
-                    return false;
-                }
-            } catch (error) {
-                console.error('Error initializing Farcaster SDK:', error);
-                return false;
-            }
-        }
-
-        // Handle messages from Farcaster parent
-        function handleFarcasterMessage(event) {
-            console.log('Received message from Farcaster:', event.data);
-            
-            if (event.data.type === 'miniapp:user') {
-                farcasterState.user = event.data.user;
-                farcasterState.connected = true;
-                showUserInfo();
-                startGame();
-            } else if (event.data.type === 'miniapp:auth') {
-                // Handle authentication
-                requestUserInfo();
-            }
-        }
-
-        // Request user info from Farcaster
-        function requestUserInfo() {
-            window.parent.postMessage({
-                type: 'miniapp:request:user'
-            }, '*');
-        }
-
-        // Connect to Farcaster
-        async function connectFarcaster() {
-            const connectBtn = doc
+             
