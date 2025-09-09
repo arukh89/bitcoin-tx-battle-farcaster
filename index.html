@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Farcaster Mini App Meta Tags -->
+    <meta name="fc:frame" content="vNext" />
+    <meta name="fc:frame:image" content="https://your-username.github.io/bitcoin-tx-battle-farcaster/assets/og-image.png" />
+    <meta name="fc:frame:button:1" content="Join Battle 🎯" />
+    <meta name="fc:frame:button:1:action" content="link" />
+    <meta name="fc:frame:button:1:target" content="https://your-username.github.io/bitcoin-tx-battle-farcaster/" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="$Seconds Bitcoin TX Battle Royale" />
+    <meta property="og:description" content="Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!" />
+    <meta property="og:image" content="https://your-username.github.io/bitcoin-tx-battle-farcaster/assets/og-image.png" />
+    <meta property="og:url" content="https://your-username.github.io/bitcoin-tx-battle-farcaster/" />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="$Seconds Bitcoin TX Battle Royale" />
+    <meta name="twitter:description" content="Real-time blockchain competition - predict Bitcoin transactions and win $SECONDS!" />
+    <meta name="twitter:image" content="https://your-username.github.io/bitcoin-tx-battle-farcaster/assets/og-image.png" />
+    
+    <title>$Seconds Bitcoin TX Battle Royale</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Mobile-first responsive design */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 20px;
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 32px;
+                max-width: 800px;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .bitcoin-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(45deg, #f7931a, #ffa500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-weight: bold;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .title {
+            font-size: clamp(20px, 5vw, 28px);
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: clamp(14px, 3vw, 16px);
+            line-height: 1.4;
+        }
+
+        .farcaster-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 8px 0;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(139, 92, 246, 0.3); }
+            to { box-shadow: 0 0 20px rgba(139, 92, 246, 0.6); }
+        }
+
+        .real-time-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #10b981, #059669);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .game-rules {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .objective {
+            font-size: clamp(14px, 3.5vw, 16px);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+        }
+
+        .prize-pool {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .prize-title {
+            font-size: clamp(16px, 4vw, 18px);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .prizes {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .prize-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: clamp(13px, 3vw, 15px);
+        }
+
+        .prize-amount {
+            font-weight: 700;
+            color: #ffd700;
+        }
+
+        .jackpot {
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.15));
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 8px;
+            text-align: center;
+            font-size: clamp(12px, 3vw, 14px);
+            font-weight: 600;
+        }
+
+        .jackpot-amount {
+            font-weight: 800;
+            color: #ffd700;
+            font-size: clamp(14px, 3.5vw, 16px);
+        }
+
+        .farcaster-connect {
+            background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 24px;
+            color: white;
+            font-weight: 600;
+            font-size: clamp(14px, 3.5vw, 16px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .farcaster-connect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .farcaster-connect:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-hints {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .hint-item {
+            font-size: clamp(12px, 3vw, 14px);
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .hint-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .mempool-link {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .mempool-link:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+
+        .user-info {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: clamp(14px, 3.5vw, 16px);
+            color: #a78bfa;
+        }
+
+        .fid-info {
+            font-size: clamp(12px, 2.5vw, 13px);
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 4px;
+        }
+
+        .game-area {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .block-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid #f7931a;
+        }
+
+        .block-number {
+            font-size: clamp(16px, 4vw, 20px);
+            font-weight: 600;
+            color: #fbbf24;
+            margin-bottom: 4px;
+        }
+
+        .block-details {
+            font-size: clamp(12px, 3vw, 14px);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .block-status {
+            font-size: clamp(11px, 2.5vw, 12px);
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .status-waiting {
+            background: rgba(249, 115, 22, 0.2);
+            color: #f97316;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .status-mined {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .guess-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .guess-input {
+            width: 100%;
+            max-width: 200px;
+            padding: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: clamp(16px, 4vw, 18px);
+            text-align: center;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .guess-input:focus {
+            outline: none;
+            border-color: #f7931a;
+            box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.2);
+        }
+
+        .submit-btn {
+            padding: 16px 32px;
+            background: linear-gradient(45deg, #f7931a, #ffa500);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: clamp(14px, 3.5vw, 16px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(247, 147, 26, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: clamp(12px, 3vw, 14px);
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #f7931a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .waiting-area {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            
+            .container {
+                padding: 16px;
+                border-radius: 16px;
+            }
+            
+            .bitcoin-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="bitcoin-icon">₿</div>
+            <h1 class="title">$Seconds Bitcoin TX Battle Royale</h1>
+            <p class="subtitle">
+                Real-time blockchain competition on Farcaster
+                <span class="farcaster-badge">🟪 Farcaster Mini App</span>
+                <span class="real-time-badge">LIVE</span>
+            </p>
+        </div>
+
+        <!-- Game Rules -->
+        <div class="game-rules">
+            <div class="objective">
+                🎯 <strong>Objective:</strong> Predict the number of transactions in Bitcoin blocks<br>
+                Connect with Farcaster and the closest answer wins $SECONDS!
+            </div>
+            
+            <div class="prize-pool">
+                <div class="prize-title">Prize Pool 🏆</div>
+                <div class="prizes">
+                    <div class="prize-item">🥇 1st place: <span class="prize-amount">1000 $Seconds</span></div>
+                    <div class="prize-item">🥈 2nd place: <span class="prize-amount">500 $Seconds</span></div>
+                    <div class="jackpot">Accumulative jackpot (increases by 250 $Seconds per game): <span class="jackpot-amount">12500 $SECONDS</span></div>
+                </div>
+            </div>
+
+            <div class="game-hints">
+                <div class="hint-item">- Visit <a href="https://mempool.space" target="_blank" class="mempool-link">mempool.space</a> to see current projected transactions</div>
+                <div class="hint-item">- <strong>Strictly only one guess per Farcaster account</strong></div>
+                <div class="hint-item">- Your Farcaster identity is verified automatically</div>
+            </div>
+        </div>
+
+        <!-- Farcaster Connection -->
+        <div id="farcasterSection">
+            <button class="farcaster-connect" id="connectBtn" onclick="connectFarcaster()">
+                <span>🟪</span>
+                <span>Connect with Farcaster</span>
+            </button>
+        </div>
+
+        <!-- User Info (hidden initially) -->
+        <div class="user-info" id="userInfo" style="display: none;">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div class="username" id="username">Loading...</div>
+            <div class="fid-info" id="fidInfo">FID: Loading...</div>
+        </div>
+
+        <!-- Game Area (hidden initially) -->
+        <div class="game-area" id="gameArea" style="display: none;">
+            <div class="block-info">
+                <div class="block-number" id="blockNumber">Loading...</div>
+                <div class="block-details" id="blockDetails">Connecting to mempool.space...</div>
+                <div class="block-status status-waiting" id="blockStatus">Waiting for next block</div>
+            </div>
+
+            <div class="guess-section" id="guessSection">
+                <input type="number" id="guessInput" class="guess-input" placeholder="Your guess..." min="1" max="10000">
+                <br><br>
+                <button class="submit-btn" id="submitBtn" onclick="submitGuess()">Submit Guess</button>
+                <div style="margin-top: 12px; font-size: 12px; color: rgba(255, 255, 255, 0.6);">
+                    Guess how many transactions will be in the next block!
+                </div>
+            </div>
+
+            <div class="waiting-area" id="waitingArea" style="display: none;">
+                <div class="loading-spinner"></div>
+                <div>Waiting for next block to be mined...</div>
+                <div style="font-size: 12px; margin-top: 8px; color: rgba(255, 255, 255, 0.6);">
+                    Battle ends when the block is found
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Farcaster Mini App State
+        let farcasterState = {
+            connected: false,
+            user: null,
+            sdk: null,
+            currentGuess: null
+        };
+
+        // Game state
+        let gameState = {
+            phase: 'connecting',
+            currentBlockHeight: 0,
+            actualTxCount: 0,
+            mempoolData: null,
+            blockCheckInterval: null
+        };
+
+        // Initialize Farcaster Mini App SDK
+        async function initializeFarcasterSDK() {
+            try {
+                // Check if running in Farcaster client
+                if (typeof window !== 'undefined' && window.parent !== window) {
+                    // We're in an iframe (likely Farcaster)
+                    console.log('Running in Farcaster client');
+                    
+                    // Send ready message to parent
+                    window.parent.postMessage({
+                        type: 'miniapp:ready'
+                    }, '*');
+                    
+                    // Listen for messages from parent
+                    window.addEventListener('message', handleFarcasterMessage);
+                    
+                    return true;
+                } else {
+                    console.log('Not running in Farcaster client - demo mode');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error initializing Farcaster SDK:', error);
+                return false;
+            }
+        }
+
+        // Handle messages from Farcaster parent
+        function handleFarcasterMessage(event) {
+            console.log('Received message from Farcaster:', event.data);
+            
+            if (event.data.type === 'miniapp:user') {
+                farcasterState.user = event.data.user;
+                farcasterState.connected = true;
+                showUserInfo();
+                startGame();
+            } else if (event.data.type === 'miniapp:auth') {
+                // Handle authentication
+                requestUserInfo();
+            }
+        }
+
+        // Request user info from Farcaster
+        function requestUserInfo() {
+            window.parent.postMessage({
+                type: 'miniapp:request:user'
+            }, '*');
+        }
+
+        // Connect to Farcaster
+        async function connectFarcaster() {
+            const connectBtn = doc
